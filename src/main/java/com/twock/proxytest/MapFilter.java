@@ -1,14 +1,17 @@
 package com.twock.proxytest;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.twock.proxytest.map.DataTile;
-import com.twock.proxytest.map.MapTiles;
+import com.twock.proxytest.map.MapTile;
+import com.twock.proxytest.map.JsonMapReader;
+import com.twock.proxytest.map.ParsedJsonMapResponse;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
@@ -30,22 +33,19 @@ public class MapFilter implements HttpFilter {
   private static final Logger log = LoggerFactory.getLogger(MapFilter.class);
   @PersistenceContext
   private EntityManager entityManager;
+  @Inject
+  private JsonMapReader mapReader;
 
   @Override
   public HttpResponse filterResponse(HttpRequest request, HttpResponse response) {
     String responseString = response.getContent().toString(UTF_8);
     log.debug("Filtering {} {} {} {}", request.getMethod(), request.getUri(), request.getHeaders(), responseString);
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      MapTiles mapTiles = mapper.readValue(responseString, MapTiles.class);
-      for(Map.Entry<String, DataTile> entry : mapTiles.getData().entrySet()) {
+      ParsedJsonMapResponse mapTiles = mapReader.parseJson(responseString);
+      for(Map.Entry<String, MapTile> entry : mapTiles.getData().entrySet()) {
         entityManager.merge(entry.getValue());
       }
       entityManager.flush();
       log.debug("Parsed response: {}", mapTiles);
-    } catch(IOException e) {
-      log.debug("Failed to parse response", e);
-    }
     return response;
   }
 

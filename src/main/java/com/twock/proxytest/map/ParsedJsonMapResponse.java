@@ -6,16 +6,16 @@ import java.util.Map;
 /**
  * @author Chris Pearson
  */
-public class MapTiles {
+public class ParsedJsonMapResponse {
   private Map<String, Long> allianceMights;
   private Map<String, String> allianceNames;
   private boolean ok;
-  private Map<String, DataTile> data;
+  private Map<String, MapTile> data;
   private Map<String, UserInfo> userInfo;
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder().append("MapTiles{").append("allianceMights=").append(allianceMights).append(", allianceNames=").append(allianceNames).append(", ok=").append(ok);
+    StringBuilder sb = new StringBuilder().append("ParsedJsonMapResponse{").append("allianceMights=").append(allianceMights).append(", allianceNames=").append(allianceNames).append(", ok=").append(ok);
     sb.append(", data=");
     appendMapContent(sb, data);
     sb.append(", userInfo=");
@@ -60,11 +60,11 @@ public class MapTiles {
     this.ok = ok;
   }
 
-  public Map<String, DataTile> getData() {
+  public Map<String, MapTile> getData() {
     return data;
   }
 
-  public void setData(Map<String, DataTile> data) {
+  public void setData(Map<String, MapTile> data) {
     this.data = data;
   }
 

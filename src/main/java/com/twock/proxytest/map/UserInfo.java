@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @Entity
 public class UserInfo {
+  private long id;
   private Date lastUpdated = new Date();
   private String name;
   private int level;
@@ -22,19 +23,13 @@ public class UserInfo {
   private int i;
   private Race race;
 
-  @Override
-  public String toString() {
-    return "UserInfo{" +
-      "lastUpdated=" + lastUpdated +
-      ", name='" + name + '\'' +
-      ", level=" + level +
-      ", might=" + might +
-      ", s='" + s + '\'' +
-      ", w=" + w +
-      ", allianceId=" + allianceId +
-      ", i=" + i +
-      ", race=" + race +
-      '}';
+  @Id
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   public Date getLastUpdated() {
@@ -46,7 +41,6 @@ public class UserInfo {
   }
 
   @JsonProperty("n")
-  @Id
   public String getName() {
     return name;
   }
@@ -113,5 +107,21 @@ public class UserInfo {
 
   public void setRace(Race race) {
     this.race = race;
+  }
+
+  @Override
+  public String toString() {
+    return "UserInfo{" +
+      "id=" + id +
+      ", lastUpdated=" + lastUpdated +
+      ", name='" + name + '\'' +
+      ", level=" + level +
+      ", might=" + might +
+      ", s='" + s + '\'' +
+      ", w=" + w +
+      ", allianceId=" + allianceId +
+      ", i=" + i +
+      ", race=" + race +
+      '}';
   }
 }

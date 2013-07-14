@@ -1,14 +1,12 @@
 package com.twock.proxytest.map;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 /**
  * @author Chris Pearson
  */
 @Entity
-public class DataTile {
+public class MapTile {
   private long tileId;
   private int xCoord;
   private int yCoord;
@@ -20,31 +18,11 @@ public class DataTile {
   private Race race;
   private int tileUserId;
   private int tileAllianceId;
+  private Alliance tileAlliance;
   private int tileProvinceId;
   private long tileBlockId;
   private String tileImgName;
   private boolean misted;
-
-  @Override
-  public String toString() {
-    return "DataTile{" +
-      "tileId=" + tileId +
-      ", xCoord=" + xCoord +
-      ", yCoord=" + yCoord +
-      ", tileType=" + tileType +
-      ", orgTileLevel=" + orgTileLevel +
-      ", tileLevel=" + tileLevel +
-      ", tileCityId=" + tileCityId +
-      ", cityName='" + cityName + '\'' +
-      ", race=" + race +
-      ", tileUserId=" + tileUserId +
-      ", tileAllianceId=" + tileAllianceId +
-      ", tileProvinceId=" + tileProvinceId +
-      ", tileBlockId=" + tileBlockId +
-      ", tileImgName='" + tileImgName + '\'' +
-      ", misted=" + misted +
-      '}';
-  }
 
   @Id
   public long getTileId() {
@@ -136,6 +114,15 @@ public class DataTile {
     this.tileAllianceId = tileAllianceId;
   }
 
+  @ManyToOne
+  public Alliance getTileAlliance() {
+    return tileAlliance;
+  }
+
+  public void setTileAlliance(Alliance tileAlliance) {
+    this.tileAlliance = tileAlliance;
+  }
+
   public int getTileProvinceId() {
     return tileProvinceId;
   }
@@ -166,5 +153,27 @@ public class DataTile {
 
   public void setMisted(boolean misted) {
     this.misted = misted;
+  }
+
+  @Override
+  public String toString() {
+    return "MapTile{" +
+      "tileId=" + tileId +
+      ", xCoord=" + xCoord +
+      ", yCoord=" + yCoord +
+      ", tileType=" + tileType +
+      ", orgTileLevel=" + orgTileLevel +
+      ", tileLevel=" + tileLevel +
+      ", tileCityId=" + tileCityId +
+      ", cityName='" + cityName + '\'' +
+      ", race=" + race +
+      ", tileUserId=" + tileUserId +
+      ", tileAllianceId=" + tileAllianceId +
+      ", tileAlliance=" + tileAlliance +
+      ", tileProvinceId=" + tileProvinceId +
+      ", tileBlockId=" + tileBlockId +
+      ", tileImgName='" + tileImgName + '\'' +
+      ", misted=" + misted +
+      '}';
   }
 }
