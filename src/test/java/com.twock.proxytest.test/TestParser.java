@@ -2,7 +2,6 @@ package com.twock.proxytest.test;
 
 import java.io.File;
 import java.io.FileReader;
-
 import javax.inject.Inject;
 
 import com.twock.proxytest.ProxyConfig;
@@ -14,6 +13,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.util.FileCopyUtils;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -25,9 +25,17 @@ public class TestParser extends AbstractTransactionalTestNGSpringContextTests {
   @Inject
   private JsonMapReader jsonMapReader;
 
-  @Test
-  public void testMe() throws Exception {
-    File testInputFile = new DefaultResourceLoader().getResource("classpath:fetchMapTiles.php.json").getFile();
+  @DataProvider(name = "testjson")
+  public Object[][] testjsonData() {
+    return new Object[][]{
+      {"fetchMapTiles.php.json"},
+      {"fetchMapTiles2.php.json"}
+    };
+  }
+
+  @Test(dataProvider = "testjson")
+  public void testMe(String filename) throws Exception {
+    File testInputFile = new DefaultResourceLoader().getResource("classpath:" + filename).getFile();
     String testInput = FileCopyUtils.copyToString(new FileReader(testInputFile));
     ParsedJsonMapResponse response = jsonMapReader.parseJson(testInput);
     log.debug("Parsed {}", response);
