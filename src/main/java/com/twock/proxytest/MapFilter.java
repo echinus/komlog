@@ -1,16 +1,18 @@
 package com.twock.proxytest;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.twock.proxytest.map.MapTile;
 import com.twock.proxytest.map.JsonMapReader;
+import com.twock.proxytest.map.MapTile;
 import com.twock.proxytest.map.ParsedJsonMapResponse;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -40,12 +42,26 @@ public class MapFilter implements HttpFilter {
   public HttpResponse filterResponse(HttpRequest request, HttpResponse response) {
     String responseString = response.getContent().toString(UTF_8);
     log.debug("Filtering {} {} {} {}", request.getMethod(), request.getUri(), request.getHeaders(), responseString);
-      ParsedJsonMapResponse mapTiles = mapReader.parseJson(responseString);
-      for(Map.Entry<String, MapTile> entry : mapTiles.getData().entrySet()) {
-        entityManager.merge(entry.getValue());
+    ParsedJsonMapResponse mapTiles = mapReader.parseJson(responseString);
+    for(Map.Entry<String, MapTile> entry : mapTiles.getData().entrySet()) {
+      entityManager.merge(entry.getValue());
+    }
+    entityManager.flush();
+
+    try {
+      BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+      Graphics2D graphics = (Graphics2D)image.getGraphics();
+      graphics.setColor(Color.BLUE);
+      List<MapTile> allTiles = entityManager.createQuery("select object(m) from MapTile m").getResultList();
+      for(MapTile allTile : allTiles) {
+        image.setRGB(allTile.getxCoord(), allTile.getyCoord(), Color.GRAY.getRGB());
       }
-      entityManager.flush();
-      log.debug("Parsed response: {}", mapTiles);
+      ImageIO.write(image, "png", new File("image.png"));
+    } catch(Exception e) {
+      log.error("Failed to write image", e);
+    }
+
+    log.debug("Parsed response: {}", mapTiles);
     return response;
   }
 
