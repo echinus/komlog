@@ -14,10 +14,11 @@ public class JsonMapReader {
   public ParsedJsonMapResponse parseJson(String json) {
     try {
       ParsedJsonMapResponse response = new Gson().fromJson(json, ParsedJsonMapResponse.class);
+      // construct alliances
       Map<Integer, Alliance> cachedAlliances = new HashMap<Integer, Alliance>();
       for(MapTile tile : response.getData().values()) {
         Alliance alliance = cachedAlliances.get(tile.getTileAllianceId());
-        if (alliance == null && tile.getTileAllianceId() != 0L) {
+        if(alliance == null && tile.getTileAllianceId() != 0L) {
           String allianceId = "a" + tile.getTileAllianceId();
           long might = response.getAllianceMights().get(allianceId);
           String name = response.getAllianceNames().get(allianceId);
@@ -28,6 +29,13 @@ public class JsonMapReader {
           cachedAlliances.put(tile.getTileAllianceId(), alliance);
         }
         tile.setTileAlliance(alliance);
+        // construct users
+        String userId = "u" + tile.getTileUserId();
+        UserInfo info = response.getUserInfo().get(userId);
+        if(info != null) {
+          info.setId(tile.getTileUserId());
+          tile.setTileUser(info);
+        }
       }
       return response;
     } catch(RuntimeException e) {

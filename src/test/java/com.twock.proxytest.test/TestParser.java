@@ -56,4 +56,13 @@ public class TestParser extends AbstractTransactionalTestNGSpringContextTests {
     Assert.assertEquals(tile.getTileAlliance().getName(), "Elvish Realm");
     Assert.assertEquals(tile.getTileAlliance().getMight(), 9042L);
   }
+
+  @Test(dependsOnMethods = "testLoadsWithoutError")
+  public void testUserRead() throws IOException {
+    ParsedJsonMapResponse tiles = load("fetchMapTiles.php.json");
+    MapTile tile = tiles.getData().get("l_317_t_178");
+    Assert.assertNotNull(tile.getTileUser());
+    Assert.assertEquals(tile.getTileUser().getId(), 8708881L);
+    Assert.assertEquals(tile.getTileUser().getName(), "SGT_PA");
+  }
 }

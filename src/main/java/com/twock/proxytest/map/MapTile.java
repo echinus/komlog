@@ -17,6 +17,7 @@ public class MapTile {
   private String cityName;
   private Race race;
   private int tileUserId;
+  private UserInfo tileUser;
   private int tileAllianceId;
   private Alliance tileAlliance;
   private int tileProvinceId;
@@ -97,12 +98,22 @@ public class MapTile {
     this.race = race;
   }
 
+  @Transient
   public int getTileUserId() {
     return tileUserId;
   }
 
   public void setTileUserId(int tileUserId) {
     this.tileUserId = tileUserId;
+  }
+
+  @ManyToOne
+  public UserInfo getTileUser() {
+    return tileUser;
+  }
+
+  public void setTileUser(UserInfo tileUser) {
+    this.tileUser = tileUser;
   }
 
   @Transient
