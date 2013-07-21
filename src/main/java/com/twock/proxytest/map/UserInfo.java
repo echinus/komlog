@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Chris Pearson
@@ -14,13 +14,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UserInfo {
   private long id;
   private Date lastUpdated = new Date();
+  @SerializedName("n")
   private String name;
+  @SerializedName("t")
   private int level;
+  @SerializedName("m")
   private long might;
   private String s;
   private int w;
+  @SerializedName("a")
   private int allianceId;
   private int i;
+  @SerializedName("r")
   private Race race;
 
   @Id
@@ -40,7 +45,6 @@ public class UserInfo {
     this.lastUpdated = lastUpdated;
   }
 
-  @JsonProperty("n")
   public String getName() {
     return name;
   }
@@ -49,7 +53,6 @@ public class UserInfo {
     this.name = name;
   }
 
-  @JsonProperty("t")
   public int getLevel() {
     return level;
   }
@@ -58,7 +61,6 @@ public class UserInfo {
     this.level = level;
   }
 
-  @JsonProperty("m")
   public long getMight() {
     return might;
   }
@@ -83,7 +85,6 @@ public class UserInfo {
     this.w = w;
   }
 
-  @JsonProperty("a")
   public int getAllianceId() {
     return allianceId;
   }
@@ -100,7 +101,6 @@ public class UserInfo {
     this.i = i;
   }
 
-  @JsonProperty("r")
   public Race getRace() {
     return race;
   }

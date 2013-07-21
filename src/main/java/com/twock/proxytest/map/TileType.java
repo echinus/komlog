@@ -1,28 +1,25 @@
 package com.twock.proxytest.map;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author Chris Pearson
  */
 public enum TileType {
-  BOG(0),
-  GRASSLAND(10),
-  LAKE(11),
-  WOODS(20),
-  HILLS(30),
-  MOUNTAINS(40),
-  PLAIN(50),
-  GOBLIN_CAMP(51);
-
-  private final int id;
-
-  private TileType(int id) {
-    this.id = id;
-  }
-
-  @JsonValue
-  public int getId() {
-    return id;
-  }
+  @SerializedName("0")
+  BOG,
+  @SerializedName("10")
+  GRASSLAND,
+  @SerializedName("11")
+  LAKE,
+  @SerializedName("20")
+  WOODS,
+  @SerializedName("30")
+  HILLS,
+  @SerializedName("40")
+  MOUNTAINS,
+  @SerializedName("50")
+  PLAIN,
+  @SerializedName("51")
+  GOBLIN_CAMP
 }

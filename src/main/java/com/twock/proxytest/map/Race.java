@@ -1,23 +1,15 @@
 package com.twock.proxytest.map;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gson.annotations.SerializedName;
 
 /**
-* @author Chris Pearson
-*/
+ * @author Chris Pearson
+ */
 public enum Race {
-  ELF1(0),
-  DWARF(1),
-  ELF2(2);
-
-  private final int id;
-
-  private Race(int id) {
-    this.id = id;
-  }
-
-  @JsonValue
-  public int getId() {
-    return id;
-  }
+  @SerializedName("0")
+  ELF1,
+  @SerializedName("1")
+  DWARF,
+  @SerializedName("2")
+  ELF2
 }

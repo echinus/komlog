@@ -2,10 +2,12 @@ package com.twock.proxytest.test;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import javax.inject.Inject;
 
 import com.twock.proxytest.ProxyConfig;
 import com.twock.proxytest.map.JsonMapReader;
+import com.twock.proxytest.map.MapTile;
 import com.twock.proxytest.map.ParsedJsonMapResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.util.FileCopyUtils;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -25,6 +28,12 @@ public class TestParser extends AbstractTransactionalTestNGSpringContextTests {
   @Inject
   private JsonMapReader jsonMapReader;
 
+  private ParsedJsonMapResponse load(String filename) throws IOException {
+    File testInputFile = new DefaultResourceLoader().getResource("classpath:" + filename).getFile();
+    String testInput = FileCopyUtils.copyToString(new FileReader(testInputFile));
+    return jsonMapReader.parseJson(testInput);
+  }
+
   @DataProvider(name = "testjson")
   public Object[][] testjsonData() {
     return new Object[][]{
@@ -34,10 +43,17 @@ public class TestParser extends AbstractTransactionalTestNGSpringContextTests {
   }
 
   @Test(dataProvider = "testjson")
-  public void testMe(String filename) throws Exception {
-    File testInputFile = new DefaultResourceLoader().getResource("classpath:" + filename).getFile();
-    String testInput = FileCopyUtils.copyToString(new FileReader(testInputFile));
-    ParsedJsonMapResponse response = jsonMapReader.parseJson(testInput);
+  public void testLoadsWithoutError(String filename) throws Exception {
+    ParsedJsonMapResponse response = load(filename);
     log.debug("Parsed {}", response);
+  }
+
+  @Test(dependsOnMethods = "testLoadsWithoutError")
+  public void testAllianceRead() throws IOException {
+    ParsedJsonMapResponse tiles = load("fetchMapTiles.php.json");
+    MapTile tile = tiles.getData().get("l_316_t_190");
+    Assert.assertNotNull(tile.getTileAlliance());
+    Assert.assertEquals(tile.getTileAlliance().getName(), "Elvish Realm");
+    Assert.assertEquals(tile.getTileAlliance().getMight(), 9042L);
   }
 }

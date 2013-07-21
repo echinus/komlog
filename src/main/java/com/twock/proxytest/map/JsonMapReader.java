@@ -1,9 +1,6 @@
 package com.twock.proxytest.map;
 
-import java.io.IOException;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,8 +10,7 @@ import org.springframework.stereotype.Component;
 public class JsonMapReader {
   public ParsedJsonMapResponse parseJson(String json) {
     try {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.readValue(json, ParsedJsonMapResponse.class);
+      return new Gson().fromJson(json, ParsedJsonMapResponse.class);
     } catch(RuntimeException e) {
       throw e;
     } catch(Exception e) {
