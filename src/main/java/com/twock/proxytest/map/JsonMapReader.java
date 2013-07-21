@@ -1,5 +1,8 @@
 package com.twock.proxytest.map;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +13,23 @@ import org.springframework.stereotype.Component;
 public class JsonMapReader {
   public ParsedJsonMapResponse parseJson(String json) {
     try {
-      return new Gson().fromJson(json, ParsedJsonMapResponse.class);
+      ParsedJsonMapResponse response = new Gson().fromJson(json, ParsedJsonMapResponse.class);
+      Map<Integer, Alliance> cachedAlliances = new HashMap<Integer, Alliance>();
+      for(MapTile tile : response.getData().values()) {
+        Alliance alliance = cachedAlliances.get(tile.getTileAllianceId());
+        if (alliance == null && tile.getTileAllianceId() != 0L) {
+          String allianceId = "a" + tile.getTileAllianceId();
+          long might = response.getAllianceMights().get(allianceId);
+          String name = response.getAllianceNames().get(allianceId);
+          alliance = new Alliance();
+          alliance.setAllianceId(tile.getTileAllianceId());
+          alliance.setMight(might);
+          alliance.setName(name);
+          cachedAlliances.put(tile.getTileAllianceId(), alliance);
+        }
+        tile.setTileAlliance(alliance);
+      }
+      return response;
     } catch(RuntimeException e) {
       throw e;
     } catch(Exception e) {
