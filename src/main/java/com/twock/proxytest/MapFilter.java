@@ -54,20 +54,29 @@ public class MapFilter implements HttpFilter {
         BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
         List<MapTile> allTiles = entityManager.createQuery("select object(m) from MapTile m").getResultList();
         for(MapTile allTile : allTiles) {
-          int rgb = GRAY.getRGB();
+          Color rgb;
           if(allTile.getTileUser() != null && "ploppy".equals(allTile.getTileUser().getName())) {
-            rgb = BLUE.getRGB();
+            rgb = BLUE;
+          } else if(allTile.getTileUser() != null
+            && ("the Doctor".equals(allTile.getTileUser().getName()) || "DaperDan".equals(allTile.getTileUser().getName()))) {
+            rgb = RED;
+          } else if(allTile.getTileAlliance() != null && "Breaking_Bad".equals(allTile.getTileAlliance().getName())) {
+            rgb = GREEN;
           } else if(allTile.getCityName() != null) {
-            rgb = Color.RED.getRGB();
+            rgb = WHITE;
+          } else if(mapTiles.getData().values().contains(allTile)) {
+            rgb = LIGHT_GRAY;
+          } else {
+            rgb = GRAY;
           }
-          image.setRGB(allTile.getxCoord(), allTile.getyCoord(), rgb);
+          image.setRGB(allTile.getxCoord() - 1, allTile.getyCoord() - 1, rgb.getRGB());
         }
         ImageIO.write(image, "png", new File("image.png"));
       } catch(Exception e) {
         log.error("Failed to write image", e);
       }
 
-      log.debug("Parsed response: {}", mapTiles);
+      log.trace("Parsed response: {}", mapTiles);
     } catch(Exception e) {
       log.error("Failed to process request", e);
     }
