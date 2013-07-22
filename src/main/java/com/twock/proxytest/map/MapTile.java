@@ -107,7 +107,7 @@ public class MapTile {
     this.tileUserId = tileUserId;
   }
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   public UserInfo getTileUser() {
     return tileUser;
   }
@@ -125,7 +125,7 @@ public class MapTile {
     this.tileAllianceId = tileAllianceId;
   }
 
-  @ManyToOne
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   public Alliance getTileAlliance() {
     return tileAlliance;
   }

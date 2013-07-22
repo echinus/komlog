@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -24,6 +23,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.awt.Color.*;
+
 /**
  * @author Chris Pearson
  */
@@ -40,28 +41,36 @@ public class MapFilter implements HttpFilter {
 
   @Override
   public HttpResponse filterResponse(HttpRequest request, HttpResponse response) {
-    String responseString = response.getContent().toString(UTF_8);
-    log.debug("Filtering {} {} {} {}", request.getMethod(), request.getUri(), request.getHeaders(), responseString);
-    ParsedJsonMapResponse mapTiles = mapReader.parseJson(responseString);
-    for(Map.Entry<String, MapTile> entry : mapTiles.getData().entrySet()) {
-      entityManager.merge(entry.getValue());
-    }
-    entityManager.flush();
-
     try {
-      BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
-      Graphics2D graphics = (Graphics2D)image.getGraphics();
-      graphics.setColor(Color.BLUE);
-      List<MapTile> allTiles = entityManager.createQuery("select object(m) from MapTile m").getResultList();
-      for(MapTile allTile : allTiles) {
-        image.setRGB(allTile.getxCoord(), allTile.getyCoord(), Color.GRAY.getRGB());
+      String responseString = response.getContent().toString(UTF_8);
+      log.debug("Filtering {} {} {} {}", request.getMethod(), request.getUri(), request.getHeaders(), responseString);
+      ParsedJsonMapResponse mapTiles = mapReader.parseJson(responseString);
+      for(MapTile mapTile : mapTiles.getData().values()) {
+        entityManager.merge(mapTile);
       }
-      ImageIO.write(image, "png", new File("image.png"));
-    } catch(Exception e) {
-      log.error("Failed to write image", e);
-    }
+      entityManager.flush();
 
-    log.debug("Parsed response: {}", mapTiles);
+      try {
+        BufferedImage image = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+        List<MapTile> allTiles = entityManager.createQuery("select object(m) from MapTile m").getResultList();
+        for(MapTile allTile : allTiles) {
+          int rgb = GRAY.getRGB();
+          if(allTile.getTileUser() != null && "ploppy".equals(allTile.getTileUser().getName())) {
+            rgb = BLUE.getRGB();
+          } else if(allTile.getCityName() != null) {
+            rgb = Color.RED.getRGB();
+          }
+          image.setRGB(allTile.getxCoord(), allTile.getyCoord(), rgb);
+        }
+        ImageIO.write(image, "png", new File("image.png"));
+      } catch(Exception e) {
+        log.error("Failed to write image", e);
+      }
+
+      log.debug("Parsed response: {}", mapTiles);
+    } catch(Exception e) {
+      log.error("Failed to process request", e);
+    }
     return response;
   }
 
