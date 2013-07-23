@@ -1,14 +1,14 @@
-package com.twock.proxytest.test;
+package com.twock.komlog.test;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.inject.Inject;
 
-import com.twock.proxytest.ProxyConfig;
-import com.twock.proxytest.map.JsonMapReader;
-import com.twock.proxytest.map.MapTile;
-import com.twock.proxytest.map.ParsedJsonMapResponse;
+import com.twock.komlog.ProxyConfig;
+import com.twock.komlog.map.JsonMapReader;
+import com.twock.komlog.map.MapTile;
+import com.twock.komlog.map.ParsedJsonMapResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;

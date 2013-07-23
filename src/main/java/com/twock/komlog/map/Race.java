@@ -1,4 +1,4 @@
-package com.twock.proxytest.map;
+package com.twock.komlog.map;
 
 import com.google.gson.annotations.SerializedName;
 

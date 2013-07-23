@@ -1,4 +1,4 @@
-package com.twock.proxytest.map;
+package com.twock.komlog.map;
 
 import java.util.Iterator;
 import java.util.Map;

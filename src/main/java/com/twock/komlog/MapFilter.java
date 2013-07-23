@@ -1,4 +1,4 @@
-package com.twock.proxytest;
+package com.twock.komlog;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,9 +10,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.twock.proxytest.map.JsonMapReader;
-import com.twock.proxytest.map.MapTile;
-import com.twock.proxytest.map.ParsedJsonMapResponse;
+import com.twock.komlog.map.JsonMapReader;
+import com.twock.komlog.map.MapTile;
+import com.twock.komlog.map.ParsedJsonMapResponse;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;

@@ -1,4 +1,4 @@
-package com.twock.proxytest;
+package com.twock.komlog;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -16,15 +16,15 @@ import org.springframework.stereotype.Component;
  * @author Chris Pearson
  */
 @Component
-public class ProxyTest {
-  private static final Logger log = LoggerFactory.getLogger(ProxyTest.class);
+public class KomLog {
+  private static final Logger log = LoggerFactory.getLogger(KomLog.class);
   @Inject
   private HttpFilter mapFilter;
 
   public static void main(String[] args) {
     AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ProxyConfig.class);
     context.registerShutdownHook();
-    context.getBean(ProxyTest.class).run(args);
+    context.getBean(KomLog.class).run(args);
   }
 
   public void run(String[] args) {

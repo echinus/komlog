@@ -1,4 +1,4 @@
-package com.twock.proxytest;
+package com.twock.komlog;
 
 import java.util.Properties;
 import javax.inject.Inject;
@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Chris Pearson
  */
 @Configuration
-@PropertySource("classpath:/proxytest.properties")
-@ComponentScan(basePackages = "com.twock.proxytest")
+@PropertySource("classpath:/komlog.properties")
+@ComponentScan(basePackages = "com.twock.komlog")
 @EnableTransactionManagement
 public class ProxyConfig {
   @Inject
@@ -30,7 +30,7 @@ public class ProxyConfig {
   public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
     LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
     factoryBean.setDataSource(proxydb());
-    factoryBean.setPackagesToScan("com.twock.proxytest.map");
+    factoryBean.setPackagesToScan("com.twock.komlog.map");
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
     vendorAdapter.setDatabasePlatform(env.getProperty("hibernate.dialect"));
 //    vendorAdapter.setShowSql(true);
