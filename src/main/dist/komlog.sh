@@ -1,0 +1,1 @@
+java -classpath "etc:lib/*" com.twock.komlog.KomLog
