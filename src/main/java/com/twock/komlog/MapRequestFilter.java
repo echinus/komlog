@@ -1,18 +1,14 @@
 package com.twock.komlog;
 
-import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.base64.Base64;
@@ -29,11 +25,16 @@ import org.springframework.stereotype.Component;
 public class MapRequestFilter implements HttpRequestFilter {
   private static final Logger log = LoggerFactory.getLogger(MapRequestFilter.class);
   private static final Pattern REQUEST_DATA = Pattern.compile("(?<=data=)(.*?)(?=&)");
+  private static final int SQUARE_SIZE = 10;
+  private static final boolean REWRITING = true;
   @Inject
   private Charset utf8;
 
   @Override
   public void filter(HttpRequest httpRequest) {
+    if (!REWRITING) {
+      return;
+    }
     if(!HttpMethod.POST.equals(httpRequest.getMethod()) || !httpRequest.getUri().endsWith("/fetchMapTiles.php")) {
       return;
     }
@@ -56,7 +57,7 @@ public class MapRequestFilter implements HttpRequestFilter {
       requestMatcher.appendReplacement(sb, replace1(requestMatcher.group(1)));
       requestMatcher.appendTail(sb);
       ChannelBuffer channelBuffer = ChannelBuffers.copiedBuffer(sb.toString().getBytes(utf8));
-//      httpRequest.setContent(channelBuffer);
+      httpRequest.setContent(channelBuffer);
     } catch(Exception e) {
       log.debug("Failed to decode base64: {}", httpRequest.getContent().toString(), e);
     }
@@ -73,15 +74,27 @@ public class MapRequestFilter implements HttpRequestFilter {
   private String replace2(String decoded) {
     log.debug("Processing decoded request data {}", decoded);
     QueryStringDecoder decoder = new QueryStringDecoder(decoded, utf8, false);
-    Map<String,List<String>> parameters = decoder.getParameters();
+    Map<String, List<String>> parameters = decoder.getParameters();
     log.debug("Parameters: {}", parameters);
 
     List<String> blocks = parameters.get("blocks");
     String[] blockNames = blocks.get(0).split(",");
+    Integer[] extents = getExtents(blockNames);
     log.debug("Querying blocks {}", blocks);
-    for (int x = 0; x < 10; x++) {
-
+    StringBuilder sb = new StringBuilder();
+    int xStart = (int)Math.max(0.0, Math.min(800.0 - SQUARE_SIZE * 5.0, Math.round((double)(extents[0] + extents[1]) / 10.0) * 5));
+    int yStart = (int)Math.max(0.0, Math.min(800.0 - SQUARE_SIZE * 5.0, Math.round((double)(extents[2] + extents[3]) / 10.0) * 5));
+    for(int x = 0; x < SQUARE_SIZE; x++) {
+      for(int y = 0; y < SQUARE_SIZE; y++) {
+        if(y > 0 || x > 0) {
+          sb.append(",");
+        }
+        sb.append("bl_").append(xStart + 5 * x).append("_bt_").append(yStart + 5 * y);
+      }
     }
+    log.debug("Overriding with block query for {}", sb);
+    parameters.put("blocks", Arrays.asList(sb.toString()));
+    parameters.put("changed", Collections.<String>emptyList());
 
     QueryStringEncoder encoder = new QueryStringEncoder("", utf8);
     for(Map.Entry<String, List<String>> entry : parameters.entrySet()) {
@@ -89,26 +102,30 @@ public class MapRequestFilter implements HttpRequestFilter {
         encoder.addParam(entry.getKey(), parameterValue);
       }
     }
+    String rewrittenDecoded = encoder.toString().substring(1);
+    log.debug("Updated decoded request data: {}", rewrittenDecoded);
+    return rewrittenDecoded;
+  }
 
-/*
-    Pattern blocks = Pattern.compile("blocks=(bl_\\d+_bt_\\d+,?)");
-    Matcher matcher = blocks.matcher(decoded);
-    if(matcher.matches()) {
-      StringBuffer sb = new StringBuffer();
-      matcher.appendReplacement(sb, "blocks=");
-      for(int bl = 1; bl < 10; bl++) {
-        for(int bt = 1; bt < 10; bt++) {
-          if(bl > 1 || bt > 1) {
-            sb.append(',');
-          }
-          sb.append("bl_").append(bl * 5).append("_bt_").append(bt * 5);
-        }
+  private Integer[] getExtents(String[] blockNames) {
+    Integer[] result = new Integer[4];
+    for(String blockName : blockNames) {
+      String[] split = blockName.split("_");
+      int x = Integer.parseInt(split[1]);
+      int y = Integer.parseInt(split[3]);
+      if(result[0] == null || x < result[0]) {
+        result[0] = x;
       }
-      matcher.appendTail(sb);
-      log.debug("Reformed request to {}", sb.toString());
-      httpRequest.setContent(Base64.encode(ChannelBuffers.copiedBuffer(URLEncoder.encode(sb.toString(), "UTF-8").getBytes(Charset.forName("UTF-8")))));
+      if(result[1] == null || x > result[1]) {
+        result[1] = x;
+      }
+      if(result[2] == null || y < result[2]) {
+        result[2] = y;
+      }
+      if(result[3] == null || y > result[3]) {
+        result[3] = y;
+      }
     }
-*/
-    return decoded;
+    return result;
   }
 }
