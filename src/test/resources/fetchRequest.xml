@@ -1,0 +1,94 @@
+<org.jboss.netty.handler.codec.http.DefaultHttpRequest>
+  <headers>
+    <entries>
+      <null/>
+      <null/>
+      <null/>
+      <org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry>
+        <hash>3569816</hash>
+        <key>Host</key>
+        <value>www72.hobbitmobile.com</value>
+        <next>
+          <hash>817908814</hash>
+          <key>Content-Type</key>
+          <value>application/x-www-form-urlencoded</value>
+          <before>
+            <hash>764271226</hash>
+            <key>Content-Length</key>
+            <value>541</value>
+            <before>
+              <hash>-1</hash>
+              <before>
+                <hash>96590</hash>
+                <key>Via</key>
+                <value>1.1.Chriss-MacBook-Air.local</value>
+                <next>
+                  <hash>615935496</hash>
+                  <key>Accept-Encoding</key>
+                  <value>gzip</value>
+                  <before>
+                    <hash>1398608221</hash>
+                    <key>User-Agent</key>
+                    <value>Dalvik/1.6.0 (Linux; U; Android 4.1.2; GT-I9300 Build/JZO54K)</value>
+                    <before reference="../../../../../../.."/>
+                    <after reference="../.."/>
+                  </before>
+                  <after reference="../.."/>
+                </next>
+                <before reference="../next"/>
+                <after reference="../.."/>
+              </before>
+              <after reference="../.."/>
+            </before>
+            <after reference="../.."/>
+          </before>
+          <after reference="../.."/>
+        </next>
+        <before reference="../next"/>
+        <after reference="../next/before/before/before/next/before"/>
+      </org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <null/>
+      <org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry reference="../org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry/next/before/before/before"/>
+      <org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry reference="../org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry/next/before/before/before/next/before"/>
+      <null/>
+      <org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry reference="../org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry/next/before"/>
+    </entries>
+    <head reference="../entries/org.jboss.netty.handler.codec.http.HttpHeaders_-HeaderEntry/next/before/before"/>
+  </headers>
+  <version>
+    <protocolName>HTTP</protocolName>
+    <majorVersion>1</majorVersion>
+    <minorVersion>1</minorVersion>
+    <text>HTTP/1.1</text>
+    <keepAliveDefault>true</keepAliveDefault>
+  </version>
+  <content class="org.jboss.netty.buffer.BigEndianHeapChannelBuffer">
+    <readerIndex>0</readerIndex>
+    <writerIndex>541</writerIndex>
+    <markedReaderIndex>0</markedReaderIndex>
+    <markedWriterIndex>0</markedWriterIndex>
+    <array>ZGF0YT1ZbXh2WTJ0elBXSnNYek14TlY5aWRGOHhPRFVsTW1OaWJGOHpNVFZmWW5SZk1UZ3dKVEpq
+WW14Zk16RTFYMkowWHpFM05TVXlZMkpzWHpNeE1GOWlkRjh4T0RVbE1tTmliRjh6TVRCZlluUmZN
+VGd3SlRKallteGZNekV3WDJKMFh6RTNOU1pqYUdGdVoyVmtQU1pzWVc1blBXVnVKbXRoWW1GdFgy
+bGtQVEV4TkRNNE1ERXlNQ1p1WVdsa1BURXhNamM0TlRJMU1pWmhZMk5sYzNOZmRHOXJaVzQ5WXpB
+M1l6Sm1Zamd0WW1SaU9TMDBZekkwTFRrNE1tVXRNV0ZtWXpJNU1XUTNaakV6Sm0xdlltbHNaV2xr
+UFRjM05UVTROR0UzTmpSa1pUTXpPVEl6TnpGa1pUSTNabUZrWkRFeU56SmlKbkJzWVhSbWIzSnRh
+V1E5TWpBekptSmxZMjl0WlY5MWMyVnlYMmxrUFNaaVpXTnZiV1ZmY0dGemMzZHZjbVE5Sm1SbFlu
+Vm5QVEFtWjNabGNqMDJMakF1TVNabllXMWxVMnh2ZEQweU9DWnlZV05sUFRFbVoyRnRaVTUxYldK
+bGNqMHhNemMxTVRZM05qRXpKbWRoYldWTFpYazlOREUxT1RRNVlURmtNemszT1RsbFpXRXdOMlUx
+T0RrME5UTTVOalJrWm1RJTNkJnZjcz02LjAuMQ==</array>
+  </content>
+  <chunked>false</chunked>
+  <method>
+    <name>POST</name>
+  </method>
+  <uri>/ajax/fetchMapTiles.php</uri>
+</org.jboss.netty.handler.codec.http.DefaultHttpRequest>

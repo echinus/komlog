@@ -1,5 +1,6 @@
 package com.twock.komlog;
 
+import java.nio.charset.Charset;
 import java.util.Properties;
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -78,5 +79,10 @@ public class ProxyConfig {
     tds.setMaxActive(10);
     tds.setMaxWait(50);
     return tds;
+  }
+
+  @Bean
+  public Charset utf8() {
+    return Charset.forName("UTF-8");
   }
 }
