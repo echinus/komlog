@@ -1,1 +1,1 @@
-java -classpath "etc:lib/*" com.twock.komlog.KomLog
+java -jar lib/${project.build.finalName}.jar
